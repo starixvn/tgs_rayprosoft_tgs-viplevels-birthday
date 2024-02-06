@@ -34,7 +34,7 @@ internal class FormPendingCommandService(
 		await vipLevelServiceClient.PlayerVipLevelBirthdayFormPendingAsync(
 			id: form.Id,
 			operatorUserId: Guid.Empty,
-			operatorUsername: string.Empty,
+			operatorUsername: "system",
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}

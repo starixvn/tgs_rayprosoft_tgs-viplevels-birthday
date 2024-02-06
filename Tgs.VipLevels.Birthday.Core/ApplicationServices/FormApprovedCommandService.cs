@@ -36,7 +36,7 @@ internal class FormApprovedCommandService(
 			amount: form.Amount,
 			remark: "This system automatically passes the review",
 			operatorUserId: Guid.Empty,
-			operatorUsername: string.Empty,
+			operatorUsername: "system",
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}

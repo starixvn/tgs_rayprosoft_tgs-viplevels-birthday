@@ -51,7 +51,7 @@ internal class FormCreateCommandService(
 					playerCode: playerCode,
 					birthday: birthday,
 					operatorUserId: Guid.Empty,
-					operatorUsername: string.Empty,
+					operatorUsername: "system",
 					cancellationToken: cancellationToken)
 					.ConfigureAwait(false);
 
