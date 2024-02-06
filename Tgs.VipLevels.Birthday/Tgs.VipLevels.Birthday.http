@@ -1,0 +1,6 @@
+@Tgs.VipLevels.Birthday_HostAddress = http://localhost:5114
+
+GET {{Tgs.VipLevels.Birthday_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

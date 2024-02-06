@@ -1,0 +1,33 @@
+﻿syntax = "proto3";
+
+import "phoenix/protobuf/guid.proto";
+//import "phoenix/protobuf/decimal.proto";
+
+option csharp_namespace = "Tgs.VipLevels.Birthday.Common.Protos";
+
+package viplevelsbirthdaycommon;
+
+// The greeting service definition.
+
+
+// The request message containing the user's name.
+message VipLevelsBirthdayBrandMessage {
+    // 總公司識別碼
+    phoenix.protobuf.GuidValue reseller_id = 1;
+    // 總公司代碼
+    string reseller_code = 2;
+    // 公司識別碼
+    phoenix.protobuf.GuidValue licensee_id = 3;
+    // 公司代碼
+    string licensee_code = 4;
+    // 平台識別碼
+    phoenix.protobuf.GuidValue brand_id = 5;
+    // 平台代碼
+    string brand_code = 6;
+    // 平台時間輟
+	int32 time_span_minutes = 7;
+}
+message VipLevelsBirthdayFormMessage {
+    // 玩家VipLevel生日單號
+    phoenix.protobuf.GuidValue id = 1;
+}
