@@ -15,5 +15,6 @@ public static class ServiceCollectionExtensions
 			ServiceLifetime.Transient)
 		.AddSingleton<IHangfireLock>((sp) => ActivatorUtilities.CreateInstance<HangfireLock>(sp, redisDatabaseResolver(sp)))
 		.AddScoped<IHangfireUtensil, HangfireUtensil>()
-		.AddSingleton<ISystemClock, SystemClock>();
+		.AddSingleton<ISystemClock, SystemClock>()
+		.AddSingleton<IDateTimeUtensil, DateTimeUtensil>();
 }

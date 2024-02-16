@@ -6,9 +6,11 @@ using Tgs.VipLevelService.Clients;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevels.Birthday.Core.ApplicationServices;
+
 internal class FormCreateCommandService(
 	ILogger<FormCreateCommandService> logger,
 	ISystemClock systemClock,
+	IDateTimeUtensil dateTimeUtensil,
 	IPlayerServiceClient playerServiceClient,
 	IVipLevelServiceClient vipLevelServiceClient,
 	IMessageSender messageSender) : ICommandService<FormCreateCommand>
@@ -16,8 +18,9 @@ internal class FormCreateCommandService(
 	public async ValueTask ExecuteAsync(FormCreateCommand command, CancellationToken cancellationToken = default)
 	{
 		IEnumerable<string> playerCodes;
-		var currentTime = systemClock.GetTimeZone(command.TimeSpanMinutes);
-		var birthday = DateOnly.FromDateTime(currentTime.Date);
+		var currentTime = systemClock.CurrentTime;
+		var timeZone = dateTimeUtensil.GetTimeZone(currentTime, command.TimeSpanMinutes);
+		var birthday = DateOnly.FromDateTime(timeZone.Date);
 		var page = 1;
 		var rows = 100;
 		do
@@ -72,7 +75,6 @@ internal class FormCreateCommandService(
 			}
 
 			page++;
-
 		} while (playerCodes.Any());
 	}
 }

@@ -4,6 +4,7 @@ using Tgs.VipLevels.Birthday.Core.Models;
 using Tgs.VipLevels.Birthday.Entities;
 
 namespace Tgs.VipLevels.Birthday.Repositories;
+
 internal class BrandRepository(TgsContext context) : IBrandRepository
 {
 	public IAsyncEnumerable<BrandInfo> QueryAsync(CancellationToken cancellationToken = default)

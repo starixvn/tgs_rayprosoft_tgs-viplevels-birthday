@@ -5,6 +5,7 @@ using Tgs.VipLevelService.Clients;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevels.Birthday.Core.ApplicationServices;
+
 internal class FormQueueCommandService(
 	ILogger<FormQueueCommandService> logger,
 	IVipLevelServiceClient vipLevelServiceClient,

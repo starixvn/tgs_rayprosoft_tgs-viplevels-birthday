@@ -3,6 +3,7 @@ using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Clients;
 
 namespace Tgs.VipLevels.Birthday.Core.ApplicationServices;
+
 internal class FormPendingCommandService(
 	ILogger<FormPendingCommandService> logger,
 	IVipLevelServiceClient vipLevelServiceClient) : ICommandService<FormPendingCommand>
@@ -39,4 +40,3 @@ internal class FormPendingCommandService(
 			.ConfigureAwait(false);
 	}
 }
-

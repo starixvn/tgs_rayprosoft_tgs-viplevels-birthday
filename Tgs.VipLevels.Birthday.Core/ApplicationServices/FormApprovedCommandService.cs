@@ -3,6 +3,7 @@ using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Clients;
 
 namespace Tgs.VipLevels.Birthday.Core.ApplicationServices;
+
 internal class FormApprovedCommandService(
 	ILogger<FormApprovedCommandService> logger,
 	IVipLevelServiceClient vipLevelServiceClient) : ICommandService<FormApprovedCommand>
@@ -41,4 +42,3 @@ internal class FormApprovedCommandService(
 			.ConfigureAwait(false);
 	}
 }
-
