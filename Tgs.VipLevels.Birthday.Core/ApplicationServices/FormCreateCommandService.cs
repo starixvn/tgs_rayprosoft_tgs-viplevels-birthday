@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tgs.PlayerService.Client;
 using Tgs.ServiceUtility;
-using Tgs.VipLevels.Birthday.Common.Protos;
 using Tgs.VipLevelService.Clients;
-using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevels.Birthday.Core.ApplicationServices;
 
@@ -12,8 +10,7 @@ internal class FormCreateCommandService(
 	ISystemClock systemClock,
 	IDateTimeUtensil dateTimeUtensil,
 	IPlayerServiceClient playerServiceClient,
-	IVipLevelServiceClient vipLevelServiceClient,
-	IMessageSender messageSender) : ICommandService<FormCreateCommand>
+	IVipLevelServiceClient vipLevelServiceClient) : ICommandService<FormCreateCommand>
 {
 	public async ValueTask ExecuteAsync(FormCreateCommand command, CancellationToken cancellationToken = default)
 	{
@@ -58,20 +55,9 @@ internal class FormCreateCommandService(
 					cancellationToken: cancellationToken)
 					.ConfigureAwait(false);
 
-				var message = new VipLevelsBirthdayFormMessage
-				{
-					Id = id
-				};
-				await messageSender.PublishAsync(
-					subject: VipLevelsBirthdayNatsConst.Queue,
-					data: message,
-					cancellationToken: cancellationToken)
-					.ConfigureAwait(false);
-
-				logger.LogInformation("LogOn:{logOn} Subject:{subject} Message:This message has been published.({message})",
+				logger.LogInformation("LogOn:{logOn}  Message:This player VIP level form was created successfully.({id})",
 					DateTime.Now.ToString("u"),
-					VipLevelsBirthdayNatsConst.Queue,
-					message);
+					id);
 			}
 
 			page++;

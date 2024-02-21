@@ -21,7 +21,7 @@
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="Tgs.PlayerService.Client" Version="0.2.5" />
     <PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
-    <PackageReference Include="Tgs.VipLevelService.Client" Version="0.0.24" />
+    <PackageReference Include="Tgs.VipLevelService.Client" Version="0.0.25" />
   </ItemGroup>
 
   <ItemGroup>

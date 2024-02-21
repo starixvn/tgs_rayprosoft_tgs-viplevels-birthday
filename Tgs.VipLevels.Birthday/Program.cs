@@ -93,15 +93,9 @@ builder.Services
 	.AddMessageQueue()
 	.AddNatsMessageQueue(config => config
 	.ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
-	.AddHandler<FormCreateMessageHandler>(VipLevelsBirthdayNatsConst.Create, VipLevelsBirthdayNatsConst.Create)
-	.AddHandler<FormQueueMessageHandler>(VipLevelsBirthdayNatsConst.Queue, VipLevelsBirthdayNatsConst.Queue)
-	.AddHandler<FormApprovedMessageHandler>(VipLevelsBirthdayNatsConst.Approved, VipLevelsBirthdayNatsConst.Approved)
-	.AddHandler<FormPendingMessageHandler>(VipLevelsBirthdayNatsConst.Pending, VipLevelsBirthdayNatsConst.Pending))
+	.AddHandler<FormCreateMessageHandler>(VipLevelsBirthdayNatsConst.Create, VipLevelsBirthdayNatsConst.Create))
 	.ClearAllExchanges()
-	.AddNatsGlobPatternExchange(VipLevelsBirthdayNatsConst.Create)
-	.AddNatsGlobPatternExchange(VipLevelsBirthdayNatsConst.Queue)
-	.AddNatsGlobPatternExchange(VipLevelsBirthdayNatsConst.Approved)
-	.AddNatsGlobPatternExchange(VipLevelsBirthdayNatsConst.Pending);
+	.AddNatsGlobPatternExchange(VipLevelsBirthdayNatsConst.Create);
 
 builder.Services
 	.AddOpenTelemetry()

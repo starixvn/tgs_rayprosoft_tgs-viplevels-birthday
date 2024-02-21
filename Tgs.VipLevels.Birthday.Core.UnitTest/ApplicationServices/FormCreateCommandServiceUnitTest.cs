@@ -20,7 +20,6 @@ public class FormCreateCommandServiceUnitTest
 		var fakeDateTimeUtensil = Substitute.For<IDateTimeUtensil>();
 		var fakePlayerServiceClient = Substitute.For<IPlayerServiceClient>();
 		var fakeVipLevelServiceClient = Substitute.For<IVipLevelServiceClient>();
-		var fakeMessageSender = Substitute.For<IMessageSender>();
 
 		var command = new FormCreateCommand
 		(
@@ -73,20 +72,9 @@ public class FormCreateCommandServiceUnitTest
 			fakeSystemClock,
 			fakeDateTimeUtensil,
 			fakePlayerServiceClient,
-			fakeVipLevelServiceClient,
-			fakeMessageSender);
+			fakeVipLevelServiceClient);
 
 		await sut.ExecuteAsync(command);
-
-		_ = fakeMessageSender
-			.Received(1)
-			.PublishAsync(
-			subject: Arg.Is(VipLevelsBirthdayNatsConst.Queue),
-			data: Arg.Is(new VipLevelsBirthdayFormMessage
-			{
-				Id = id
-			}),
-			cancellationToken: Arg.Any<CancellationToken>());
 	}
 
 	[Fact]
@@ -97,7 +85,6 @@ public class FormCreateCommandServiceUnitTest
 		var fakeDateTimeUtensil = Substitute.For<IDateTimeUtensil>();
 		var fakePlayerServiceClient = Substitute.For<IPlayerServiceClient>();
 		var fakeVipLevelServiceClient = Substitute.For<IVipLevelServiceClient>();
-		var fakeMessageSender = Substitute.For<IMessageSender>();
 
 		var command = new FormCreateCommand
 		(
@@ -141,16 +128,8 @@ public class FormCreateCommandServiceUnitTest
 			fakeSystemClock,
 			fakeDateTimeUtensil,
 			fakePlayerServiceClient,
-			fakeVipLevelServiceClient,
-			fakeMessageSender);
+			fakeVipLevelServiceClient);
 
 		await sut.ExecuteAsync(command);
-
-		_ = fakeMessageSender
-			.Received(0)
-			.PublishAsync(
-			subject: Arg.Is(VipLevelsBirthdayNatsConst.Queue),
-			data: Arg.Any<VipLevelsBirthdayFormMessage>(),
-			cancellationToken: Arg.Any<CancellationToken>());
 	}
 }
