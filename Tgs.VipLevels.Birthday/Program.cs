@@ -10,7 +10,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Tgs.MessageQueue.Nats.Serializers;
 using Tgs.VipLevels.Birthday;
-using Tgs.VipLevels.Birthday.Core;
+using Tgs.VipLevels.Birthday.Common;
 using Tgs.VipLevels.Birthday.Messages;
 
 var filterInstrumentations = new[] { "html", "ico", "png", "jpg" };

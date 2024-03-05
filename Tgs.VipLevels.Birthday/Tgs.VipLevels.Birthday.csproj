@@ -33,6 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Tgs.VipLevels.Birthday.Common\Tgs.VipLevels.Birthday.Common.csproj" />
 		<ProjectReference Include="..\Tgs.VipLevels.Birthday.Core\Tgs.VipLevels.Birthday.Core.csproj" />
 		<ProjectReference Include="..\Tgs.VipLevels.Birthday.Repositories\Tgs.VipLevels.Birthday.Repositories.csproj" />
 	</ItemGroup>

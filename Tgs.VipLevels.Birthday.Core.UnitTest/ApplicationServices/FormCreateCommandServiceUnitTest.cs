@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Tgs.PlayerService.Client;
-using Tgs.VipLevels.Birthday.Common.Protos;
 using Tgs.VipLevels.Birthday.Core.ApplicationServices;
 using Tgs.VipLevelService.Clients;
-using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevels.Birthday.Core.UnitTest.ApplicationServices;
 
@@ -16,7 +14,6 @@ public class FormCreateCommandServiceUnitTest
 	public async void Normal_Process()
 	{
 		var fakeLog = NullLogger<FormCreateCommandService>.Instance;
-		var fakeSystemClock = Substitute.For<ISystemClock>();
 		var fakeDateTimeUtensil = Substitute.For<IDateTimeUtensil>();
 		var fakePlayerServiceClient = Substitute.For<IPlayerServiceClient>();
 		var fakeVipLevelServiceClient = Substitute.For<IVipLevelServiceClient>();
@@ -29,17 +26,14 @@ public class FormCreateCommandServiceUnitTest
 			LicenseeCode: "GPI",
 			BrandId: Guid.NewGuid(),
 			BrandCode: "GPI",
-			TimeSpanMinutes: 480
+			TimeSpanMinutes: 480,
+			CurrentTime: new DateTimeOffset(2024, 02, 15, 04, 00, 00, TimeSpan.Zero)
 		);
-
-		var currentTime = new DateTimeOffset(2024, 02, 15, 04, 00, 00, TimeSpan.Zero);
-		_ = fakeSystemClock.CurrentTime
-			.Returns(currentTime);
 
 		var timeZone = new DateTimeOffset(2024, 02, 15, 12, 00, 00, TimeSpan.FromMinutes(command.TimeSpanMinutes));
 		_ = fakeDateTimeUtensil.GetTimeZone(
-			currentTime,
-			command.TimeSpanMinutes)
+			source: Arg.Is(command.CurrentTime),
+			timeSpanMinutes: Arg.Is(command.TimeSpanMinutes))
 			.Returns(timeZone);
 
 		var birthday = DateOnly.FromDateTime(timeZone.Date);
@@ -69,7 +63,6 @@ public class FormCreateCommandServiceUnitTest
 
 		var sut = new FormCreateCommandService(
 			fakeLog,
-			fakeSystemClock,
 			fakeDateTimeUtensil,
 			fakePlayerServiceClient,
 			fakeVipLevelServiceClient);
@@ -81,7 +74,6 @@ public class FormCreateCommandServiceUnitTest
 	public async void This_player_VIP_level_benefits_have_been_distributed()
 	{
 		var fakeLog = NullLogger<FormCreateCommandService>.Instance;
-		var fakeSystemClock = Substitute.For<ISystemClock>();
 		var fakeDateTimeUtensil = Substitute.For<IDateTimeUtensil>();
 		var fakePlayerServiceClient = Substitute.For<IPlayerServiceClient>();
 		var fakeVipLevelServiceClient = Substitute.For<IVipLevelServiceClient>();
@@ -94,17 +86,14 @@ public class FormCreateCommandServiceUnitTest
 			LicenseeCode: "GPI",
 			BrandId: Guid.NewGuid(),
 			BrandCode: "GPI",
-			TimeSpanMinutes: 480
+			TimeSpanMinutes: 480,
+			CurrentTime: new DateTimeOffset(2024, 02, 15, 04, 00, 00, TimeSpan.Zero)
 		);
-
-		var currentTime = new DateTimeOffset(2024, 02, 15, 04, 00, 00, TimeSpan.Zero);
-		_ = fakeSystemClock.CurrentTime
-			.Returns(currentTime);
 
 		var timeZone = new DateTimeOffset(2024, 02, 15, 12, 00, 00, TimeSpan.FromMinutes(command.TimeSpanMinutes));
 		_ = fakeDateTimeUtensil.GetTimeZone(
-			currentTime,
-			command.TimeSpanMinutes)
+			source: Arg.Is(command.CurrentTime),
+			timeSpanMinutes: Arg.Is(command.TimeSpanMinutes))
 			.Returns(timeZone);
 
 		var birthday = DateOnly.FromDateTime(timeZone.Date);
@@ -125,11 +114,80 @@ public class FormCreateCommandServiceUnitTest
 
 		var sut = new FormCreateCommandService(
 			fakeLog,
-			fakeSystemClock,
 			fakeDateTimeUtensil,
 			fakePlayerServiceClient,
 			fakeVipLevelServiceClient);
 
 		await sut.ExecuteAsync(command);
+
+		_ = fakeVipLevelServiceClient
+			.Received(0)
+			.PlayerVipLevelBirthdayFormCreateAsync(
+			playerCode: Arg.Is("4ucmqplxb029"),
+			birthday: Arg.Is(birthday),
+			operatorUserId: Arg.Is(Guid.Empty),
+			operatorUsername: Arg.Is("system"),
+			cancellationToken: Arg.Any<CancellationToken>());
+	}
+
+	[Fact]
+	public async void Enumerable_Empty()
+	{
+		var fakeLog = NullLogger<FormCreateCommandService>.Instance;
+		var fakeDateTimeUtensil = Substitute.For<IDateTimeUtensil>();
+		var fakePlayerServiceClient = Substitute.For<IPlayerServiceClient>();
+		var fakeVipLevelServiceClient = Substitute.For<IVipLevelServiceClient>();
+
+		var command = new FormCreateCommand
+		(
+			ResellerId: Guid.NewGuid(),
+			ResellerCode: "Demon",
+			LicenseeId: Guid.NewGuid(),
+			LicenseeCode: "GPI",
+			BrandId: Guid.NewGuid(),
+			BrandCode: "GPI",
+			TimeSpanMinutes: 480,
+			CurrentTime: new DateTimeOffset(2024, 02, 15, 04, 00, 00, TimeSpan.Zero)
+		);
+
+		var timeZone = new DateTimeOffset(2024, 02, 15, 12, 00, 00, TimeSpan.FromMinutes(command.TimeSpanMinutes));
+		_ = fakeDateTimeUtensil.GetTimeZone(
+			source: Arg.Is(command.CurrentTime),
+			timeSpanMinutes: Arg.Is(command.TimeSpanMinutes))
+			.Returns(timeZone);
+
+		var birthday = DateOnly.FromDateTime(timeZone.Date);
+
+		_ = fakePlayerServiceClient.QueryPlayerBirthdayAsync(
+			brandId: Arg.Is(command.BrandId),
+			birthday: Arg.Is(birthday),
+			page: Arg.Any<int>(),
+			rows: Arg.Any<int>(),
+			cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(Enumerable.Empty<string>().ToAsyncEnumerable());
+
+		var sut = new FormCreateCommandService(
+			fakeLog,
+			fakeDateTimeUtensil,
+			fakePlayerServiceClient,
+			fakeVipLevelServiceClient);
+
+		await sut.ExecuteAsync(command);
+
+		_ = fakeVipLevelServiceClient
+			.Received(0)
+			.PlayerVipLevelBirthdayFormExistAsync(
+			playerCode: Arg.Is("4ucmqplxb029"),
+			birthday: Arg.Is(birthday),
+			cancellationToken: Arg.Any<CancellationToken>());
+
+		_ = fakeVipLevelServiceClient
+			.Received(0)
+			.PlayerVipLevelBirthdayFormCreateAsync(
+			playerCode: Arg.Is("4ucmqplxb029"),
+			birthday: Arg.Is(birthday),
+			operatorUserId: Arg.Is(Guid.Empty),
+			operatorUsername: Arg.Is("system"),
+			cancellationToken: Arg.Any<CancellationToken>());
 	}
 }

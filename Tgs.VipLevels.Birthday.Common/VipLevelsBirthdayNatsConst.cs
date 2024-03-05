@@ -1,6 +1,6 @@
-﻿namespace Tgs.VipLevels.Birthday.Core;
+﻿namespace Tgs.VipLevels.Birthday.Common;
+
 public class VipLevelsBirthdayNatsConst
 {
 	public const string Create = "tgs.viplevel.birthday.create";
-
 }

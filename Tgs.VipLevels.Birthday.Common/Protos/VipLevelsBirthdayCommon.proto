@@ -2,10 +2,11 @@
 
 import "phoenix/protobuf/guid.proto";
 //import "phoenix/protobuf/decimal.proto";
+import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Tgs.VipLevels.Birthday.Common.Protos";
 
-package viplevelsbirthdaycommon;
+package VipLevelsBirthdayCommon;
 
 // The greeting service definition.
 
@@ -26,8 +27,6 @@ message VipLevelsBirthdayBrandMessage {
     string brand_code = 6;
     // 平台時間輟
 	int32 time_span_minutes = 7;
-}
-message VipLevelsBirthdayFormMessage {
-    // 玩家VipLevel生日單號
-    phoenix.protobuf.GuidValue id = 1;
+    // 當前時間
+    google.protobuf.Timestamp current_time = 8;
 }

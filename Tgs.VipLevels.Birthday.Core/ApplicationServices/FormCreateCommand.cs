@@ -6,4 +6,5 @@ public record FormCreateCommand(
 	string LicenseeCode,
 	Guid BrandId,
 	string BrandCode,
-	int TimeSpanMinutes);
+	int TimeSpanMinutes,
+	DateTimeOffset CurrentTime);

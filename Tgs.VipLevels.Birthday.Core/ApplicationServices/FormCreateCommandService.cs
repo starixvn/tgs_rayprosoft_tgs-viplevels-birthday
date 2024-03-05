@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Tgs.PlayerService.Client;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Clients;
@@ -7,7 +8,6 @@ namespace Tgs.VipLevels.Birthday.Core.ApplicationServices;
 
 internal class FormCreateCommandService(
 	ILogger<FormCreateCommandService> logger,
-	ISystemClock systemClock,
 	IDateTimeUtensil dateTimeUtensil,
 	IPlayerServiceClient playerServiceClient,
 	IVipLevelServiceClient vipLevelServiceClient) : ICommandService<FormCreateCommand>
@@ -15,9 +15,20 @@ internal class FormCreateCommandService(
 	public async ValueTask ExecuteAsync(FormCreateCommand command, CancellationToken cancellationToken = default)
 	{
 		IEnumerable<string> playerCodes;
-		var currentTime = systemClock.CurrentTime;
-		var timeZone = dateTimeUtensil.GetTimeZone(currentTime, command.TimeSpanMinutes);
-		var birthday = DateOnly.FromDateTime(timeZone.Date);
+		var timeZoneCurrentTime = dateTimeUtensil.GetTimeZone(command.CurrentTime, command.TimeSpanMinutes);
+		var birthday = DateOnly.FromDateTime(timeZoneCurrentTime.Date);
+
+		logger.LogInformation("LogOn:{logOn} Message:Process information in this cycle.({info})",
+			DateTime.Now.ToString("o"),
+			JsonSerializer.Serialize(new
+			{
+				command.BrandCode,
+				command.CurrentTime,
+				command.TimeSpanMinutes,
+				TimeZoneCurrentTime = timeZoneCurrentTime,
+				Birthday = birthday
+			}));
+
 		var page = 1;
 		var rows = 100;
 		do

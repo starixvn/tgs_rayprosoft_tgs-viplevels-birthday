@@ -11,6 +11,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["nuget.config", "."]
 COPY ["Tgs.VipLevels.Birthday/Tgs.VipLevels.Birthday.csproj", "Tgs.VipLevels.Birthday/"]
+COPY ["Tgs.VipLevels.Birthday.Common/Tgs.VipLevels.Birthday.Common.csproj", "Tgs.VipLevels.Birthday.Common/"]
 COPY ["Tgs.VipLevels.Birthday.Core/Tgs.VipLevels.Birthday.Core.csproj", "Tgs.VipLevels.Birthday.Core/"]
 COPY ["Tgs.VipLevels.Birthday.Repositories/Tgs.VipLevels.Birthday.Repositories.csproj", "Tgs.VipLevels.Birthday.Repositories/"]
 RUN dotnet restore "./Tgs.VipLevels.Birthday/./Tgs.VipLevels.Birthday.csproj"

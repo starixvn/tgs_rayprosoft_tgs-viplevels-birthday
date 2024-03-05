@@ -54,12 +54,12 @@ internal class JobInitCommandService(
 					LicenseeCode: brand.LicenseeCode,
 					BrandId: brand.BrandId,
 					BrandCode: brand.BrandCode,
-					TimeSpanMinutes: brand.TimeSpanMinutes);
+					TimeSpanMinutes: 480);
 
 				RecurringJob.AddOrUpdate<IHangfireUtensil>(
 					recurringJobId: $"{brand.ResellerCode}|{brand.LicenseeCode}|{brand.BrandCode}|{brand.TimeSpanMinutes}",
 					methodCall: service => service.JobExecuteAsync(jobExecuteCommand),
-					cronExpression: "0 12 * * *",
+					cronExpression: "0 12-23/1 * * *",
 					options: _recurringJobOptions);
 			}
 		}

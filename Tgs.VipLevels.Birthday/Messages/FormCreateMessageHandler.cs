@@ -24,7 +24,8 @@ internal class FormCreateMessageHandler(
 				LicenseeCode: data.LicenseeCode,
 				BrandId: data.BrandId.ToGuid(),
 				BrandCode: data.BrandCode,
-				TimeSpanMinutes: data.TimeSpanMinutes),
+				TimeSpanMinutes: data.TimeSpanMinutes,
+				CurrentTime: data.CurrentTime.ToDateTimeOffset()),
 			cancellationToken: cancellationToken);
 	}
 }
