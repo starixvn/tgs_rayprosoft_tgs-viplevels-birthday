@@ -119,3 +119,9 @@ affinity:
           values:
           - viplevels-birthday
       topologyKey: kubernetes.io/hostname
+
+restart:
+  enabled: false
+  serviceAccount: viplevels-birthday-restarter
+  annotations: {}
+  schedule: 0 0 * * *
