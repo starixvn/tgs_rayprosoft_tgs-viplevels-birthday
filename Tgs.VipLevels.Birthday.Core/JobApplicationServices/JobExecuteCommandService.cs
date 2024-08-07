@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using System.Text.Json;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
 
 using Tgs.ServiceUtility;
@@ -32,9 +33,20 @@ internal class JobExecuteCommandService(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		logger.LogInformation("LogOn:{logOn} Subject:{subject} Message:This message has been published.({message})",
-			DateTime.Now.ToString("u"),
-			VipLevelsBirthdayNatsConst.Create,
-			message);
+		logger.LogInformation("{logInformation}",
+			JsonSerializer.Serialize(new
+			{
+				LogOn = DateTime.Now.ToString("u"),
+				Subject = VipLevelsBirthdayNatsConst.Create,
+				Data = new
+				{
+					message.ResellerCode,
+					message.LicenseeCode,
+					message.BrandCode,
+					message.TimeSpanMinutes,
+					CurrentTime = message.CurrentTime.ToDateTimeOffset()
+				},
+				Message = "This message has been published."
+			}));
 	}
 }

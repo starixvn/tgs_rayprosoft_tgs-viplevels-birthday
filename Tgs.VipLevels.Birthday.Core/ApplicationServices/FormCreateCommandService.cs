@@ -18,15 +18,21 @@ internal class FormCreateCommandService(
 		var timeZoneCurrentTime = dateTimeUtensil.GetTimeZone(command.CurrentTime, command.TimeSpanMinutes);
 		var birthday = DateOnly.FromDateTime(timeZoneCurrentTime.Date);
 
-		logger.LogInformation("LogOn:{logOn} Message:Process information in this cycle.({info})",
-			DateTime.Now.ToString("o"),
+		logger.LogInformation("{logInformation}",
 			JsonSerializer.Serialize(new
 			{
-				command.BrandCode,
-				command.CurrentTime,
-				command.TimeSpanMinutes,
-				TimeZoneCurrentTime = timeZoneCurrentTime,
-				Birthday = birthday
+				LogOn = DateTime.Now.ToString("u"),
+				Data = new
+				{
+					command.ResellerCode,
+					command.LicenseeCode,
+					command.BrandCode,
+					command.TimeSpanMinutes,
+					command.CurrentTime,
+					TimeZoneCurrentTime = timeZoneCurrentTime,
+					Birthday = birthday
+				},
+				Message = "Process information in this birthday."
 			}));
 
 		var page = 1;
@@ -51,10 +57,21 @@ internal class FormCreateCommandService(
 					cancellationToken: cancellationToken)
 					.ConfigureAwait(false))
 				{
-					logger.LogWarning("LogOn:{logOn} Message:This player ({playerCode}) has already received birthday gifts this year({year}).",
-						DateTime.Now.ToString("u"),
-						playerCode,
-						birthday.Year);
+					logger.LogWarning("{logWarning}",
+						JsonSerializer.Serialize(new
+						{
+							LogOn = DateTime.Now.ToString("u"),
+							Data = new
+							{
+								command.ResellerCode,
+								command.LicenseeCode,
+								command.BrandCode,
+								PlayerCode = playerCode,
+								birthday.Year,
+								Birthday = birthday,
+							},
+							Message = "This player has already received birthday gifts this year."
+						}));
 					continue;
 				}
 
@@ -66,9 +83,22 @@ internal class FormCreateCommandService(
 					cancellationToken: cancellationToken)
 					.ConfigureAwait(false);
 
-				logger.LogInformation("LogOn:{logOn}  Message:This player VIP level form was created successfully.({id})",
-					DateTime.Now.ToString("u"),
-					id);
+				logger.LogInformation("{logInformation}",
+					JsonSerializer.Serialize(new
+					{
+						LogOn = DateTime.Now.ToString("u"),
+						Data = new
+						{
+							command.ResellerCode,
+							command.LicenseeCode,
+							command.BrandCode,
+							PlayerCode = playerCode,
+							birthday.Year,
+							Birthday = birthday,
+							Id = id
+						},
+						Message = "This player VIP level form was created successfully."
+					}));
 			}
 
 			page++;

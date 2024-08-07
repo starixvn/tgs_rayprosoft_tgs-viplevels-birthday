@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using System.Text.Json;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 using Tgs.VipLevels.Birthday.Common;
 using Tgs.VipLevels.Birthday.Common.Protos;
@@ -55,14 +56,28 @@ public class PlayerVipLevelBirthdayFormController(
 			CurrentTime = source.CurrentTime.ToTimestamp()
 		};
 		await messageSender.PublishAsync(
-		subject: VipLevelsBirthdayNatsConst.Create,
-		data: message,
+			subject: VipLevelsBirthdayNatsConst.Create,
+			data: message,
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 
-		logger.LogInformation("LogOn:{logOn} Subject:{subject} Message:This message has been published.({message})",
-			DateTime.Now.ToString("u"),
-			VipLevelsBirthdayNatsConst.Create,
-			message);
+		logger.LogInformation("{logInformation}",
+			JsonSerializer.Serialize(new
+			{
+				LogOn = DateTime.Now.ToString("u"),
+				Subject = VipLevelsBirthdayNatsConst.Create,
+				Data = new
+				{
+					ResellerId = message.ResellerId.ToGuid(),
+					message.ResellerCode,
+					LicenseeId = message.LicenseeId.ToGuid(),
+					message.LicenseeCode,
+					BrandId = message.BrandId.ToGuid(),
+					message.BrandCode,
+					message.TimeSpanMinutes,
+					CurrentTime = message.CurrentTime.ToDateTimeOffset()
+				},
+				Message = "This message has been published."
+			}));
 	}
 }
