@@ -7,17 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
     <PackageReference Include="Hangfire.Dashboard.Management" Version="1.7.9" />
     <PackageReference Include="Hangfire.Redis.StackExchange" Version="1.9.3" />
     <PackageReference Include="PhoenixToolkits.MessageQueue" Version="2.2.0" />
     <PackageReference Include="PhoenixToolkits.MessageQueue.Nats" Version="2.2.0" />
     <PackageReference Include="PhoenixToolkits.Protobuf.ExtendTypes" Version="0.0.7" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-    <PackageReference Include="Tgs.PlayerService.Client" Version="0.2.5" />
+    <PackageReference Include="Tgs.PlayerService.Client" Version="0.2.7" />
     <PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
-    <PackageReference Include="Tgs.VipLevelService.Client" Version="0.0.26" />
+    <PackageReference Include="Tgs.VipLevelService.Client" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
