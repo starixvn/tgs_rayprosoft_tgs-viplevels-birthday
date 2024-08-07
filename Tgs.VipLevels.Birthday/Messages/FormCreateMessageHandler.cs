@@ -1,6 +1,8 @@
-﻿using Tgs.ServiceUtility;
+﻿using System.Text.Json;
+using Tgs.ServiceUtility;
 using Tgs.VipLevels.Birthday.Common.Protos;
 using Tgs.VipLevels.Birthday.Core.ApplicationServices;
+using Tgs.VipLevels.Birthday.Entities;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevels.Birthday.Messages;
@@ -11,10 +13,21 @@ internal class FormCreateMessageHandler(
 {
 	public ValueTask HandleAsync(string subject, VipLevelsBirthdayBrandMessage data, IEnumerable<MessageHeaderValue>? headerValues, CancellationToken cancellationToken = default)
 	{
-		logger.LogInformation("LogOn:{logOn} Subject:{subject} Mesaage:This message has been received.({data})",
-			DateTime.Now.ToString("o"),
-			subject,
-			data);
+		logger.LogInformation("{logInformation}",
+			JsonSerializer.Serialize(new
+			{
+				LogOn = DateTime.Now.ToString("u"),
+				Subject = subject,
+				Data = new
+				{
+					data.ResellerCode,
+					data.LicenseeCode,
+					data.BrandCode,
+					data.TimeSpanMinutes,
+					CurrentTime = data.CurrentTime.ToDateTimeOffset()
+				},
+				Message = "This receive message handler."
+			}));
 
 		return service.ExecuteAsync(
 			command: new FormCreateCommand(
